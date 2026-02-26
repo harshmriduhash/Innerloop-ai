@@ -1,0 +1,36 @@
+version: "3.9"
+services:
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  gateway:
+    build:
+      context: ./gateway
+    command: npm run dev
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/innerloop
+      - JWT_SECRET=change-this
+      - AGENTS_BASE=http://agents:8000
+    depends_on:
+      - mongo
+      - agents
+    ports:
+      - "4000:4000"
+
+  agents:
+    build:
+      context: ./agents
+    command: uvicorn main:app --host 0.0.0.0 --port 8000
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    ports:
+      - "8000:8000"
+
+volumes:
+  mongo-data:
+

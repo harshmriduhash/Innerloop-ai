@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <title>InnerLoop.ai – Your Thoughts Deserve Memory</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="InnerLoop.ai is a private, voice-first AI companion with long-term memory that helps you think clearly every day."
+    />
+    <link rel="manifest" href="/manifest.webmanifest" />
+  </head>
+  <body class="bg-background text-foreground">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+  </html>
+
