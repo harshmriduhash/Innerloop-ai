@@ -1,8 +1,6 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useAuth, UserButton } from "@clerk/clerk-react";
-import { MOCK_DAILY } from "../../mockData";
 
 const nav = [
   { to: "voice", label: "Voice" },
@@ -15,32 +13,10 @@ export function DashboardLayout() {
   const navigate = useNavigate();
   const { isLoaded, userId } = useAuth();
 
-  const [daily, setDaily] = useState<{
-    date: string;
-    morningText: string;
-    eveningText: string;
-    sessionsCount: number;
-  } | null>(null);
-  const [streak, setStreak] = useState(0);
-
   useEffect(() => {
     if (isLoaded && !userId) {
       navigate("/login");
       return;
-    }
-
-    async function load() {
-      try {
-        const res = await axios.get("/api/daily");
-        setDaily(res.data);
-        setStreak(res.data.sessionsCount > 0 ? 1 : 0);
-      } catch (err: any) {
-        console.error("Failed to load daily data", err);
-      }
-    }
-
-    if (userId) {
-      load();
     }
   }, [isLoaded, userId, navigate]);
 
@@ -54,12 +30,6 @@ export function DashboardLayout() {
           </p>
         </div>
         <div className="flex items-center gap-4 text-xs">
-          {daily && (
-            <div className="rounded-full border border-emerald-500/40 bg-emerald-500/10 px-3 py-1 text-[11px] text-emerald-200">
-              Today: {daily.sessionsCount} session{daily.sessionsCount === 1 ? "" : "s"} · Streak:{" "}
-              {streak} day{streak === 1 ? "" : "s"}
-            </div>
-          )}
           <UserButton afterSignOutUrl="/" />
         </div>
       </div>
