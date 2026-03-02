@@ -17,11 +17,16 @@ app.use(
   })
 );
 
-const MONGO_URI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/innerloop";
-const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-change-me";
+const MONGO_URI = process.env.MONGO_URI;
+const JWT_SECRET = process.env.JWT_SECRET;
 const AGENTS_BASE = process.env.AGENTS_BASE || "http://localhost:8000";
-const VAPID_PUBLIC_KEY = process.env.VAPID_PUBLIC_KEY || "";
-const VAPID_PRIVATE_KEY = process.env.VAPID_PRIVATE_KEY || "";
+const VAPID_PUBLIC_KEY = process.env.VAPID_PUBLIC_KEY;
+const VAPID_PRIVATE_KEY = process.env.VAPID_PRIVATE_KEY;
+
+if (!MONGO_URI || !JWT_SECRET) {
+  console.error("FATAL: MONGO_URI and JWT_SECRET must be provided in .env");
+  process.exit(1);
+}
 
 if (VAPID_PUBLIC_KEY && VAPID_PRIVATE_KEY) {
   webPush.setVapidDetails(

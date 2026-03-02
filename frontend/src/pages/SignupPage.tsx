@@ -14,7 +14,10 @@ export function SignupPage() {
     setError(null);
     setLoading(true);
     try {
-      await axios.post("/api/auth/signup", { email, password });
+      const res = await axios.post("/api/auth/signup", { email, password });
+      const { token } = res.data;
+      localStorage.setItem("innerloop_token", token);
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       navigate("/app");
     } catch (err: any) {
       setError(err.response?.data?.message ?? "Unable to sign up.");

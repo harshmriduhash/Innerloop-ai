@@ -20,21 +20,32 @@ export function DashboardLayout() {
   const [streak, setStreak] = useState(0);
 
   useEffect(() => {
+    const token = localStorage.getItem("innerloop_token");
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
     async function load() {
       try {
         const res = await axios.get("/api/daily");
         setDaily(res.data);
-        // naive streak: if sessions today > 0, mark as at least 1
         setStreak(res.data.sessionsCount > 0 ? 1 : 0);
-      } catch {
-        // ignore
+      } catch (err: any) {
+        if (err.response?.status === 401) {
+          localStorage.removeItem("innerloop_token");
+          navigate("/login");
+        }
       }
     }
     load();
-  }, []);
+  }, [navigate]);
 
   async function handleLogout() {
     await axios.post("/api/auth/logout").catch(() => undefined);
+    localStorage.removeItem("innerloop_token");
+    delete axios.defaults.headers.common["Authorization"];
     navigate("/login");
   }
 
@@ -70,10 +81,9 @@ export function DashboardLayout() {
               key={item.to}
               to={item.to}
               className={({ isActive }) =>
-                `rounded-full px-3 py-1.5 transition-colors ${
-                  isActive
-                    ? "bg-cyan-400 text-slate-950"
-                    : "bg-slate-900/70 text-slate-300 hover:bg-slate-800"
+                `rounded-full px-3 py-1.5 transition-colors ${isActive
+                  ? "bg-cyan-400 text-slate-950"
+                  : "bg-slate-900/70 text-slate-300 hover:bg-slate-800"
                 }`
               }
             >

@@ -14,7 +14,10 @@ export function LoginPage() {
     setError(null);
     setLoading(true);
     try {
-      await axios.post("/api/auth/login", { email, password });
+      const res = await axios.post("/api/auth/login", { email, password });
+      const { token } = res.data;
+      localStorage.setItem("innerloop_token", token);
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       navigate("/app");
     } catch (err: any) {
       setError(err.response?.data?.message ?? "Unable to log in.");
