@@ -1,6 +1,8 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useAuth, UserButton } from "@clerk/clerk-react";
+import { MOCK_DAILY } from "../../mockData";
 
 const nav = [
   { to: "voice", label: "Voice" },
@@ -9,8 +11,10 @@ const nav = [
   { to: "settings", label: "Settings" }
 ];
 
-export function DashboardLayout() {
+export function DashboardLayout({ isDemo }: { isDemo?: boolean }) {
   const navigate = useNavigate();
+  const { isLoaded, userId, signOut } = useAuth();
+
   const [daily, setDaily] = useState<{
     date: string;
     morningText: string;
@@ -20,12 +24,16 @@ export function DashboardLayout() {
   const [streak, setStreak] = useState(0);
 
   useEffect(() => {
-    const token = localStorage.getItem("innerloop_token");
-    if (!token) {
+    if (isDemo) {
+      setDaily(MOCK_DAILY);
+      setStreak(3);
+      return;
+    }
+
+    if (isLoaded && !userId) {
       navigate("/login");
       return;
     }
-    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
     async function load() {
       try {
@@ -33,24 +41,34 @@ export function DashboardLayout() {
         setDaily(res.data);
         setStreak(res.data.sessionsCount > 0 ? 1 : 0);
       } catch (err: any) {
-        if (err.response?.status === 401) {
-          localStorage.removeItem("innerloop_token");
-          navigate("/login");
-        }
+        console.error("Failed to load daily data", err);
       }
     }
-    load();
-  }, [navigate]);
 
-  async function handleLogout() {
-    await axios.post("/api/auth/logout").catch(() => undefined);
-    localStorage.removeItem("innerloop_token");
-    delete axios.defaults.headers.common["Authorization"];
-    navigate("/login");
-  }
+    if (userId) {
+      load();
+    }
+  }, [isDemo, isLoaded, userId, navigate]);
+
+  const handleExit = () => {
+    if (isDemo) {
+      navigate("/");
+    } else {
+      signOut();
+      navigate("/");
+    }
+  };
 
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8 md:py-10">
+      {isDemo && (
+        <div className="rounded-xl bg-cyan-400/10 border border-cyan-400/20 p-3 text-center">
+          <p className="text-xs font-medium text-cyan-300">
+            🌟 You are in **Demo Mode**. Explore all pro features freely. No data is saved.
+          </p>
+        </div>
+      )}
+
       <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
         <div>
           <h2 className="text-2xl font-semibold tracking-tight text-slate-50">InnerLoop</h2>
@@ -58,19 +76,23 @@ export function DashboardLayout() {
             Your private space to think out loud and remember what matters.
           </p>
         </div>
-        <div className="flex items-center gap-3 text-xs">
+        <div className="flex items-center gap-4 text-xs">
           {daily && (
             <div className="rounded-full border border-emerald-500/40 bg-emerald-500/10 px-3 py-1 text-[11px] text-emerald-200">
               Today: {daily.sessionsCount} session{daily.sessionsCount === 1 ? "" : "s"} · Streak:{" "}
               {streak} day{streak === 1 ? "" : "s"}
             </div>
           )}
-          <button
-            onClick={handleLogout}
-            className="rounded-full border border-slate-700 px-3 py-1.5 text-slate-300 hover:border-cyan-400 hover:text-cyan-200"
-          >
-            Log out
-          </button>
+          {!isDemo ? (
+            <UserButton afterSignOutUrl="/" />
+          ) : (
+            <button
+              onClick={handleExit}
+              className="rounded-full border border-slate-700 px-4 py-1.5 text-slate-300 hover:border-red-500/50 hover:text-red-300 transition-colors"
+            >
+              Exit Demo
+            </button>
+          )}
         </div>
       </div>
 
@@ -93,7 +115,7 @@ export function DashboardLayout() {
         </nav>
       </div>
 
-      <Outlet />
+      <Outlet context={{ isDemo }} />
     </div>
   );
 }

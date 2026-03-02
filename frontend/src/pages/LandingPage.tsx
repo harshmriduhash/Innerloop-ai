@@ -18,19 +18,19 @@ export function LandingPage() {
             you think clearly—every day. No feeds, no dopamine loops. Just depth, reflection, and
             continuity.
           </p>
-          <div className="flex flex-wrap items-center gap-6">
+          <div className="flex flex-wrap items-center gap-4">
             <Link
               to="/signup"
-              className="btn-premium flex items-center gap-2 px-8"
+              className="btn-premium shimmer flex items-center gap-2 px-8"
             >
               Start talking
               <ArrowRight size={18} />
             </Link>
             <Link
-              to="/features"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-slate-300 hover:text-cyan-300 transition-colors"
+              to="/demo"
+              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-6 py-3 text-sm font-semibold text-slate-200 backdrop-blur-sm transition-all hover:bg-white/20 hover:border-white/30 hover:shadow-xl hover:shadow-cyan-500/10"
             >
-              See how it works
+              Try Demo
             </Link>
           </div>
           <p className="text-sm font-medium text-slate-500 italic">
@@ -38,24 +38,24 @@ export function LandingPage() {
           </p>
         </div>
 
-        <div className="relative group">
-          <div className="absolute -inset-10 -z-10 bg-cyan-500/10 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
-          <div className="glass-panel relative h-full w-full p-8 overflow-hidden">
-            <div className="absolute top-0 right-0 p-4 opacity-10">
-              <Brain size={120} />
+        <div className="relative group perspective-1000">
+          <div className="absolute -inset-20 -z-10 bg-cyan-500/10 blur-[100px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+          <div className="glass-panel relative h-full w-full p-8 overflow-hidden border-white/10 group-hover:border-cyan-500/20">
+            <div className="absolute top-0 right-0 p-4 opacity-5 float">
+              <Brain size={160} />
             </div>
-            <div className="mb-6 flex items-center justify-between">
+            <div className="mb-8 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-950/80 border border-white/5 shadow-inner">
-                  <Mic size={20} className="text-cyan-400" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-950/80 border border-white/10 shadow-inner">
+                  <Mic size={22} className="text-cyan-400" />
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-slate-200">Today&apos;s inner loop</p>
-                  <p className="text-[10px] text-slate-500 uppercase tracking-widest">12:04 PM</p>
+                  <p className="text-sm font-bold text-slate-200 tracking-tight">Today&apos;s inner loop</p>
+                  <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">12:04 PM</p>
                 </div>
               </div>
               <span className="rounded-full bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 text-[10px] font-bold text-emerald-400 uppercase tracking-wider">
-                Private
+                End-to-end Encrypted
               </span>
             </div>
 

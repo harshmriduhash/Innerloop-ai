@@ -1,5 +1,7 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import axios from "axios";
+import { useOutletContext } from "react-router-dom";
+import { MOCK_DAILY } from "../../mockData";
 
 interface Message {
   role: "user" | "assistant";
@@ -7,12 +9,13 @@ interface Message {
 }
 
 export function VoicePage() {
+  const { isDemo } = useOutletContext<{ isDemo?: boolean }>();
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(false);
   const [memoryPrompt, setMemoryPrompt] = useState<string | null>(null);
   const [listening, setListening] = useState(false);
-  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const recognitionRef = useRef<any>(null);
   const [morning, setMorning] = useState("");
   const [evening, setEvening] = useState("");
 
@@ -29,7 +32,7 @@ export function VoicePage() {
     recognition.interimResults = true;
     recognition.lang = "en-US";
 
-    recognition.onresult = (event: SpeechRecognitionEvent) => {
+    recognition.onresult = (event: any) => {
       let transcript = "";
       for (let i = 0; i < event.results.length; i += 1) {
         transcript += event.results[i][0].transcript;
@@ -49,14 +52,19 @@ export function VoicePage() {
   }, []);
 
   useEffect(() => {
+    if (isDemo) {
+      setMorning(MOCK_DAILY.morningText);
+      setEvening(MOCK_DAILY.eveningText);
+      return;
+    }
     axios
       .get("/api/daily")
       .then((res) => {
-        setMorning(res.data.morningText || "");
-        setEvening(res.data.eveningText || "");
+        setMorning(res.data.morning_text || "");
+        setEvening(res.data.evening_text || "");
       })
       .catch(() => undefined);
-  }, []);
+  }, [isDemo]);
 
   function toggleListening() {
     const recognition = recognitionRef.current;
@@ -78,6 +86,22 @@ export function VoicePage() {
     setInput("");
     setMessages((prev) => [...prev, { role: "user", content: text }]);
     setLoading(true);
+
+    if (isDemo) {
+      setTimeout(() => {
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "assistant",
+            content: "In Demo Mode, I can't reach the real AI, but I'm mimicking how the reflection works. You're expressing some interesting thoughts—how does this connect to your goals for the week?"
+          }
+        ]);
+        setMemoryPrompt("A significant reflection about project goals and personal growth.");
+        setLoading(false);
+      }, 1000);
+      return;
+    }
+
     try {
       const res = await axios.post("/api/voice", { text });
       const { reply, memoryCandidate } = res.data;
@@ -106,7 +130,7 @@ export function VoicePage() {
   }
 
   async function confirmMemory(remember: boolean) {
-    if (remember && memoryPrompt) {
+    if (remember && memoryPrompt && !isDemo) {
       await axios.post("/api/memories", {
         text: memoryPrompt,
         category: "Decision"
@@ -130,8 +154,8 @@ export function VoicePage() {
             <div
               key={idx}
               className={`max-w-xs rounded-2xl px-3 py-2 ${m.role === "user"
-                  ? "ml-auto bg-cyan-500/20 text-cyan-100"
-                  : "mr-auto bg-slate-900/80 text-slate-100"
+                ? "ml-auto bg-cyan-500/20 text-cyan-100"
+                : "mr-auto bg-slate-900/80 text-slate-100"
                 }`}
             >
               {m.content}
@@ -157,8 +181,8 @@ export function VoicePage() {
             type="button"
             onClick={toggleListening}
             className={`rounded-xl border px-3 py-2 text-xs font-semibold ${listening
-                ? "border-red-400 bg-red-500/20 text-red-200"
-                : "border-cyan-500 bg-cyan-500/10 text-cyan-200"
+              ? "border-red-400 bg-red-500/20 text-red-200"
+              : "border-cyan-500 bg-cyan-500/10 text-cyan-200"
               }`}
           >
             {listening ? "Stop" : "Talk"}
@@ -193,7 +217,7 @@ export function VoicePage() {
               onChange={async (e) => {
                 const value = e.target.value;
                 setMorning(value);
-                await axios.post("/api/daily/morning", { text: value });
+                if (!isDemo) await axios.post("/api/daily/morning", { text: value });
               }}
             />
           </div>
@@ -206,7 +230,7 @@ export function VoicePage() {
               onChange={async (e) => {
                 const value = e.target.value;
                 setEvening(value);
-                await axios.post("/api/daily/evening", { text: value });
+                if (!isDemo) await axios.post("/api/daily/evening", { text: value });
               }}
             />
           </div>

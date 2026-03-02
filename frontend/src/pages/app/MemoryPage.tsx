@@ -1,18 +1,38 @@
 import { Trash2, History } from "lucide-react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useOutletContext } from "react-router-dom";
+import { MOCK_MEMORIES } from "../../mockData";
+
+interface MemoryItem {
+  id: string;
+  text: string;
+  category: string;
+  createdAt: string;
+}
 
 export function MemoryPage() {
+  const { isDemo } = useOutletContext<{ isDemo?: boolean }>();
   const [items, setItems] = useState<MemoryItem[]>([]);
 
   async function load() {
+    if (isDemo) {
+      setItems(MOCK_MEMORIES);
+      return;
+    }
     const res = await axios.get("/api/memories");
     setItems(res.data.memories);
   }
 
   useEffect(() => {
     load();
-  }, []);
+  }, [isDemo]);
 
   async function remove(id: string) {
+    if (isDemo) {
+      alert("Deleting memories is disabled in Demo Mode.");
+      return;
+    }
     if (!confirm("Are you sure you want to delete this memory?")) return;
     await axios.delete(`/api/memories/${id}`);
     setItems((prev) => prev.filter((m) => m.id !== id));

@@ -1,6 +1,7 @@
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
+import { UserButton, SignedIn, SignedOut } from "@clerk/clerk-react";
 
 const navItems = [
   { to: "/features", label: "Features" },
@@ -45,8 +46,7 @@ export function Navbar() {
               key={item.to}
               to={item.to}
               className={({ isActive }) =>
-                `transition-colors hover:text-cyan-300 ${
-                  isActive ? "text-cyan-300" : "text-slate-300"
+                `transition-colors hover:text-cyan-300 ${isActive ? "text-cyan-300" : "text-slate-300"
                 }`
               }
             >
@@ -62,22 +62,44 @@ export function Navbar() {
             {dark ? <Moon size={16} /> : <Sun size={16} />}
           </button>
 
-          {!isAuthRoute && (
-            <>
-              <Link
-                to="/login"
-                className="text-sm font-medium text-slate-300 hover:text-cyan-300"
+          <SignedIn>
+            <div className="flex items-center gap-4">
+              <NavLink
+                to="/app/voice"
+                className="text-xs font-semibold text-cyan-300 hover:text-cyan-200"
               >
-                Login
-              </Link>
+                Dashboard
+              </NavLink>
+              <UserButton afterSignOutUrl="/" />
+            </div>
+          </SignedIn>
+
+          <SignedOut>
+            <div className="flex items-center gap-4">
               <Link
-                to="/signup"
-                className="rounded-full bg-cyan-400 px-4 py-2 text-sm font-semibold text-slate-950 shadow-lg shadow-cyan-500/30 hover:bg-cyan-300"
+                to="/demo"
+                className="text-sm font-medium text-slate-400 hover:text-cyan-300 transition-colors"
               >
-                Get Started
+                Try Demo
               </Link>
-            </>
-          )}
+              {!isAuthRoute && (
+                <>
+                  <Link
+                    to="/login"
+                    className="text-sm font-medium text-slate-300 hover:text-cyan-300"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/signup"
+                    className="rounded-full bg-cyan-400 px-4 py-2 text-sm font-semibold text-slate-950 shadow-lg shadow-cyan-500/30 hover:bg-cyan-300"
+                  >
+                    Get Started
+                  </Link>
+                </>
+              )}
+            </div>
+          </SignedOut>
         </nav>
       </div>
     </header>
