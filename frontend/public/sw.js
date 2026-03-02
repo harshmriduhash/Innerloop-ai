@@ -1,4 +1,4 @@
-const SHELL_CACHE = "innerloop-shell-v1";
+const SHELL_CACHE = "innerloop-shell-v2";
 const OFFLINE_URLS = ["/", "/index.html"];
 
 self.addEventListener("install", (event) => {
@@ -17,12 +17,12 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
-// Network-first for API, cache-first for others
+// Network-first for API and Navigation, cache-first for static assets
 self.addEventListener("fetch", (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  if (url.pathname.startsWith("/api/")) {
+  if (url.pathname.startsWith("/api/") || request.mode === "navigate") {
     event.respondWith(
       fetch(request).catch(() => caches.match(request))
     );
@@ -33,6 +33,7 @@ self.addEventListener("fetch", (event) => {
     caches.match(request).then((cached) => cached || fetch(request))
   );
 });
+
 
 // Show push notifications
 self.addEventListener("push", (event) => {
