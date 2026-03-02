@@ -1,6 +1,4 @@
 import { Link, NavLink, useLocation } from "react-router-dom";
-import { Moon, Sun } from "lucide-react";
-import { useEffect, useState } from "react";
 import { UserButton, SignedIn, SignedOut } from "@clerk/clerk-react";
 
 const navItems = [
@@ -11,16 +9,6 @@ const navItems = [
 
 export function Navbar() {
   const location = useLocation();
-  const [dark, setDark] = useState(true);
-
-  useEffect(() => {
-    const root = document.documentElement;
-    if (dark) {
-      root.classList.add("dark");
-    } else {
-      root.classList.remove("dark");
-    }
-  }, [dark]);
 
   const isAuthRoute =
     location.pathname.startsWith("/login") ||
@@ -54,13 +42,6 @@ export function Navbar() {
             </NavLink>
           ))}
 
-          <button
-            onClick={() => setDark((v) => !v)}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-slate-900/60 text-slate-300 hover:bg-slate-800/70"
-            aria-label="Toggle dark mode"
-          >
-            {dark ? <Moon size={16} /> : <Sun size={16} />}
-          </button>
 
           <SignedIn>
             <div className="flex items-center gap-4">
