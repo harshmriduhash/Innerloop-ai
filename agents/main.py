@@ -4,9 +4,17 @@ from pydantic import BaseModel
 from dotenv import load_dotenv
 from openai import OpenAI
 
-load_dotenv()
+# Load .env from current dir or parent dir
+load_dotenv() # current dir
+load_dotenv("../.env") # parent dir/root
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+if not OPENAI_API_KEY:
+    print("⚠️ WARNING: OPENAI_API_KEY not found in environment or .env file.")
+else:
+    print("✅ OPENAI_API_KEY loaded successfully.")
+
 client = OpenAI(api_key=OPENAI_API_KEY) if OPENAI_API_KEY else None
 
 app = FastAPI(title="InnerLoop Agents")
