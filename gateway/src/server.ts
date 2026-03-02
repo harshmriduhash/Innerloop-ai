@@ -89,6 +89,12 @@ app.post("/api/auth/logout", (_req, res) => {
   res.json({ ok: true });
 });
 
+app.post("/api/auth/upgrade", authMiddleware, async (req, res) => {
+  const userId = (req as any).userId;
+  await User.findByIdAndUpdate(userId, { subscriptionStatus: "pro" });
+  res.json({ ok: true, subscriptionStatus: "pro" });
+});
+
 // Save push subscription for notifications
 app.post("/api/push/subscribe", authMiddleware, async (req, res) => {
   const userId = (req as any).userId;
@@ -156,7 +162,19 @@ app.post("/api/voice", authMiddleware, async (req, res) => {
   if (!text) return res.status(400).json({ message: "Text required" });
   try {
     const userId = (req as any).userId;
+    const user = await User.findById(userId);
     const today = new Date().toISOString().slice(0, 10);
+
+    const record = await DailyCheckIn.findOne({ userId, date: today });
+    const currentSessions = record?.sessionsCount || 0;
+
+    if (user?.subscriptionStatus === "free" && currentSessions >= 3) {
+      return res.status(403).json({
+        message: "Daily limit reached for free tier. Please upgrade to continue.",
+        code: "LIMIT_REACHED"
+      });
+    }
+
     await DailyCheckIn.findOneAndUpdate(
       { userId, date: today },
       { $inc: { sessionsCount: 1 } },

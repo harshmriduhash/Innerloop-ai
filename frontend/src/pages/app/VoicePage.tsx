@@ -85,6 +85,21 @@ export function VoicePage() {
       if (memoryCandidate) {
         setMemoryPrompt(memoryCandidate.text);
       }
+    } catch (err: any) {
+      if (err.response?.data?.code === "LIMIT_REACHED") {
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "assistant",
+            content: "You've reached your daily limit for the free tier. Upgrade to Pro for unlimited sessions."
+          }
+        ]);
+      } else {
+        setMessages((prev) => [
+          ...prev,
+          { role: "assistant", content: "Sorry, I'm having trouble reflecting right now." }
+        ]);
+      }
     } finally {
       setLoading(false);
     }
@@ -114,11 +129,10 @@ export function VoicePage() {
           {messages.map((m, idx) => (
             <div
               key={idx}
-              className={`max-w-xs rounded-2xl px-3 py-2 ${
-                m.role === "user"
+              className={`max-w-xs rounded-2xl px-3 py-2 ${m.role === "user"
                   ? "ml-auto bg-cyan-500/20 text-cyan-100"
                   : "mr-auto bg-slate-900/80 text-slate-100"
-              }`}
+                }`}
             >
               {m.content}
             </div>
@@ -142,11 +156,10 @@ export function VoicePage() {
           <button
             type="button"
             onClick={toggleListening}
-            className={`rounded-xl border px-3 py-2 text-xs font-semibold ${
-              listening
+            className={`rounded-xl border px-3 py-2 text-xs font-semibold ${listening
                 ? "border-red-400 bg-red-500/20 text-red-200"
                 : "border-cyan-500 bg-cyan-500/10 text-cyan-200"
-            }`}
+              }`}
           >
             {listening ? "Stop" : "Talk"}
           </button>

@@ -3,12 +3,16 @@ import mongoose, { Schema, Document } from "mongoose";
 export interface IUser extends Document {
   email: string;
   passwordHash: string;
+  subscriptionStatus: "free" | "pro";
+  stripeCustomerId?: string;
 }
 
 const UserSchema = new Schema<IUser>(
   {
     email: { type: String, unique: true, required: true },
-    passwordHash: { type: String, required: true }
+    passwordHash: { type: String, required: true },
+    subscriptionStatus: { type: String, enum: ["free", "pro"], default: "free" },
+    stripeCustomerId: { type: String }
   },
   { timestamps: true }
 );
