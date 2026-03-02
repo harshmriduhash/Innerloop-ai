@@ -11,9 +11,9 @@ const nav = [
   { to: "settings", label: "Settings" }
 ];
 
-export function DashboardLayout({ isDemo }: { isDemo?: boolean }) {
+export function DashboardLayout() {
   const navigate = useNavigate();
-  const { isLoaded, userId, signOut } = useAuth();
+  const { isLoaded, userId } = useAuth();
 
   const [daily, setDaily] = useState<{
     date: string;
@@ -24,12 +24,6 @@ export function DashboardLayout({ isDemo }: { isDemo?: boolean }) {
   const [streak, setStreak] = useState(0);
 
   useEffect(() => {
-    if (isDemo) {
-      setDaily(MOCK_DAILY);
-      setStreak(3);
-      return;
-    }
-
     if (isLoaded && !userId) {
       navigate("/login");
       return;
@@ -48,30 +42,13 @@ export function DashboardLayout({ isDemo }: { isDemo?: boolean }) {
     if (userId) {
       load();
     }
-  }, [isDemo, isLoaded, userId, navigate]);
-
-  const handleExit = () => {
-    if (isDemo) {
-      navigate("/");
-    } else {
-      signOut();
-      navigate("/");
-    }
-  };
+  }, [isLoaded, userId, navigate]);
 
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8 md:py-10">
-      {isDemo && (
-        <div className="rounded-xl bg-cyan-400/10 border border-cyan-400/20 p-3 text-center">
-          <p className="text-xs font-medium text-cyan-300">
-            🌟 You are in **Demo Mode**. Explore all pro features freely. No data is saved.
-          </p>
-        </div>
-      )}
-
       <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
         <div>
-          <h2 className="text-2xl font-semibold tracking-tight text-slate-50">InnerLoop</h2>
+          <h2 className="text-2xl font-semibold tracking-tight text-slate-50 dark:text-slate-50">InnerLoop</h2>
           <p className="text-xs text-slate-400">
             Your private space to think out loud and remember what matters.
           </p>
@@ -83,16 +60,7 @@ export function DashboardLayout({ isDemo }: { isDemo?: boolean }) {
               {streak} day{streak === 1 ? "" : "s"}
             </div>
           )}
-          {!isDemo ? (
-            <UserButton afterSignOutUrl="/" />
-          ) : (
-            <button
-              onClick={handleExit}
-              className="rounded-full border border-slate-700 px-4 py-1.5 text-slate-300 hover:border-red-500/50 hover:text-red-300 transition-colors"
-            >
-              Exit Demo
-            </button>
-          )}
+          <UserButton afterSignOutUrl="/" />
         </div>
       </div>
 
@@ -115,7 +83,7 @@ export function DashboardLayout({ isDemo }: { isDemo?: boolean }) {
         </nav>
       </div>
 
-      <Outlet context={{ isDemo }} />
+      <Outlet />
     </div>
   );
 }

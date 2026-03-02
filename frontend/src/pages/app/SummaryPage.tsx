@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useOutletContext } from "react-router-dom";
-import { MOCK_SUMMARIES } from "../../mockData";
 
 interface WeeklySummary {
   id: string;
@@ -11,16 +9,11 @@ interface WeeklySummary {
 }
 
 export function SummaryPage() {
-  const { isDemo } = useOutletContext<{ isDemo?: boolean }>();
   const [summaries, setSummaries] = useState<WeeklySummary[]>([]);
 
   useEffect(() => {
-    if (isDemo) {
-      setSummaries(MOCK_SUMMARIES);
-      return;
-    }
     axios.get("/api/summaries").then((res) => setSummaries(res.data.summaries)).catch(() => undefined);
-  }, [isDemo]);
+  }, []);
 
   const latest = summaries[0];
   const progress = latest ? Math.min(100, Math.max(0, latest.score)) : 0;

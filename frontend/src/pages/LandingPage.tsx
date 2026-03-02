@@ -26,12 +26,6 @@ export function LandingPage() {
               Start talking
               <ArrowRight size={18} />
             </Link>
-            <Link
-              to="/demo"
-              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-6 py-3 text-sm font-semibold text-slate-200 backdrop-blur-sm transition-all hover:bg-white/20 hover:border-white/30 hover:shadow-xl hover:shadow-cyan-500/10"
-            >
-              Try Demo
-            </Link>
           </div>
           <p className="text-sm font-medium text-slate-500 italic">
             "Built for overthinkers, founders, and knowledge workers."

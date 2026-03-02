@@ -1,44 +1,68 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 :root {
-  --background: 224 71% 4%;
-  --foreground: 213 31% 91%;
+  --background: 210 20% 98%;
+  --foreground: 224 71% 4%;
 
   --primary: 188 86% 53%;
   --primary-foreground: 224 71% 4%;
 
-  --secondary: 224 71% 8%;
-  --secondary-foreground: 213 31% 91%;
+  --secondary: 220 14% 96%;
+  --secondary-foreground: 222.2 47.4% 11.2%;
 
   --accent: 188 86% 53%;
   --accent-foreground: 224 71% 4%;
+
+  --card: 0 0% 100%;
+  --card-foreground: 224 71% 4%;
+
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 188 86% 53%;
+
+  --glass-bg: 210 20% 98% / 0.6;
+  --glass-border: 224 71% 4% / 0.05;
+}
+
+.dark {
+  --background: 224 71% 4%;
+  --foreground: 213 31% 91%;
+
+  --secondary: 224 71% 8%;
+  --secondary-foreground: 213 31% 91%;
 
   --card: 224 71% 6%;
   --card-foreground: 213 31% 91%;
 
   --border: 213 31% 12%;
   --input: 213 31% 12%;
-  --ring: 188 86% 53%;
+
+  --glass-bg: 224 71% 4% / 0.4;
+  --glass-border: 213 31% 91% / 0.05;
 }
 
 @layer base {
   body {
-    @apply bg-[#030712] text-slate-100 antialiased selection:bg-cyan-500/30;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    @apply antialiased selection:bg-cyan-500/30;
+    transition: background-color 0.4s ease, color 0.4s ease;
     font-feature-settings: "rlig" 1, "calt" 1;
     letter-spacing: -0.01em;
   }
 }
 
 .glass-panel {
-  @apply bg-slate-900/40 backdrop-blur-2xl border border-white/5 rounded-[2rem] shadow-2xl;
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  background-color: hsl(var(--glass-bg));
+  backdrop-blur: 16px;
+  border: 1px solid hsl(var(--glass-border));
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  transition: all 0.3s ease;
 }
 
 .glass-panel:hover {
-  @apply border-white/10 bg-slate-900/60 -translate-y-1;
-  box-shadow: 0 20px 40px -20px rgba(0, 255, 255, 0.1);
+  border-color: hsl(var(--accent) / 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 }
 
 .btn-premium {

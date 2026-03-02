@@ -76,12 +76,6 @@ export function Navbar() {
 
           <SignedOut>
             <div className="flex items-center gap-4">
-              <Link
-                to="/demo"
-                className="text-sm font-medium text-slate-400 hover:text-cyan-300 transition-colors"
-              >
-                Try Demo
-              </Link>
               {!isAuthRoute && (
                 <>
                   <Link

@@ -1,7 +1,5 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import axios from "axios";
-import { useOutletContext } from "react-router-dom";
-import { MOCK_DAILY } from "../../mockData";
 
 interface Message {
   role: "user" | "assistant";
@@ -9,7 +7,6 @@ interface Message {
 }
 
 export function VoicePage() {
-  const { isDemo } = useOutletContext<{ isDemo?: boolean }>();
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(false);
@@ -52,11 +49,6 @@ export function VoicePage() {
   }, []);
 
   useEffect(() => {
-    if (isDemo) {
-      setMorning(MOCK_DAILY.morningText);
-      setEvening(MOCK_DAILY.eveningText);
-      return;
-    }
     axios
       .get("/api/daily")
       .then((res) => {
@@ -64,7 +56,7 @@ export function VoicePage() {
         setEvening(res.data.evening_text || "");
       })
       .catch(() => undefined);
-  }, [isDemo]);
+  }, []);
 
   function toggleListening() {
     const recognition = recognitionRef.current;
@@ -86,21 +78,6 @@ export function VoicePage() {
     setInput("");
     setMessages((prev) => [...prev, { role: "user", content: text }]);
     setLoading(true);
-
-    if (isDemo) {
-      setTimeout(() => {
-        setMessages((prev) => [
-          ...prev,
-          {
-            role: "assistant",
-            content: "In Demo Mode, I can't reach the real AI, but I'm mimicking how the reflection works. You're expressing some interesting thoughts—how does this connect to your goals for the week?"
-          }
-        ]);
-        setMemoryPrompt("A significant reflection about project goals and personal growth.");
-        setLoading(false);
-      }, 1000);
-      return;
-    }
 
     try {
       const res = await axios.post("/api/voice", { text });
@@ -130,7 +107,7 @@ export function VoicePage() {
   }
 
   async function confirmMemory(remember: boolean) {
-    if (remember && memoryPrompt && !isDemo) {
+    if (remember && memoryPrompt) {
       await axios.post("/api/memories", {
         text: memoryPrompt,
         category: "Decision"
@@ -140,9 +117,9 @@ export function VoicePage() {
   }
 
   return (
-    <div className="grid gap-6 md:grid-cols-[3fr,2fr]">
+    <div className="grid gap-6 md:grid-cols-[3fr,2fr] dark:text-slate-100">
       <section className="glass-panel flex flex-col p-4">
-        <h3 className="text-sm font-semibold text-slate-100">Today&apos;s session</h3>
+        <h3 className="text-sm font-semibold text-slate-100 dark:text-slate-100">Today&apos;s session</h3>
         <div className="mt-3 flex-1 space-y-3 overflow-y-auto rounded-xl bg-slate-950/60 p-3 text-xs">
           {messages.length === 0 && (
             <p className="text-slate-500">
@@ -204,7 +181,7 @@ export function VoicePage() {
             e.preventDefault();
           }}
         >
-          <h3 className="text-sm font-semibold text-slate-100">Daily flow</h3>
+          <h3 className="text-sm font-semibold text-slate-100 dark:text-slate-100">Daily flow</h3>
           <p className="mt-1 text-[11px] text-slate-400">
             Start with a quick check-in in the morning and close your day with a short reflection.
           </p>
@@ -217,7 +194,7 @@ export function VoicePage() {
               onChange={async (e) => {
                 const value = e.target.value;
                 setMorning(value);
-                if (!isDemo) await axios.post("/api/daily/morning", { text: value });
+                await axios.post("/api/daily/morning", { text: value });
               }}
             />
           </div>
@@ -230,7 +207,7 @@ export function VoicePage() {
               onChange={async (e) => {
                 const value = e.target.value;
                 setEvening(value);
-                if (!isDemo) await axios.post("/api/daily/evening", { text: value });
+                await axios.post("/api/daily/evening", { text: value });
               }}
             />
           </div>

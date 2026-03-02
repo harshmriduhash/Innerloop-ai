@@ -17,7 +17,7 @@ import { Footer } from "./components/Footer";
 
 export default function App() {
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+    <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
       <main className="flex-1">
         <Routes>
@@ -40,13 +40,6 @@ export default function App() {
             </div>
           } />
 
-          <Route path="/demo" element={<DashboardLayout isDemo={true} />}>
-            <Route index element={<Navigate to="voice" replace />} />
-            <Route path="voice" element={<VoicePage />} />
-            <Route path="memory" element={<MemoryPage />} />
-            <Route path="summary" element={<SummaryPage />} />
-            <Route path="settings" element={<SettingsPage />} />
-          </Route>
 
           <Route path="/app" element={
             <>
