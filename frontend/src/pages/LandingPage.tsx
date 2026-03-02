@@ -3,82 +3,86 @@ import { ArrowRight, Mic, Sparkles, ShieldCheck, Brain } from "lucide-react";
 
 export function LandingPage() {
   return (
-    <div className="mx-auto flex max-w-6xl flex-col gap-16 px-4 py-10 md:py-16">
+    <div className="page-fade-in mx-auto flex max-w-6xl flex-col gap-16 px-4 py-10 md:py-16">
       <section className="grid gap-10 md:grid-cols-[3fr,2fr] md:items-center">
-        <div className="space-y-6">
-          <div className="inline-flex items-center rounded-full border border-cyan-500/40 bg-cyan-500/10 px-3 py-1 text-xs font-medium text-cyan-200">
-            Voice-first · Private · With memory
+        <div className="space-y-8">
+          <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/20 bg-cyan-500/10 px-4 py-1.5 text-xs font-semibold tracking-wide text-cyan-200 uppercase">
+            <Sparkles size={12} />
+            Voice-first · Private · Memory
           </div>
-          <h1 className="text-balance text-4xl font-semibold tracking-tight text-slate-50 md:text-5xl lg:text-6xl">
-            Your thoughts deserve <span className="text-cyan-300">memory</span>.
+          <h1 className="text-balance text-5xl font-extrabold tracking-tighter text-slate-50 md:text-6xl lg:text-7xl leading-tight">
+            Your thoughts deserve <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">memory</span>.
           </h1>
-          <p className="max-w-xl text-balance text-sm text-slate-300 md:text-base">
+          <p className="max-w-xl text-balance text-lg leading-relaxed text-slate-400">
             InnerLoop is a private, voice-first AI companion that remembers what matters and helps
             you think clearly—every day. No feeds, no dopamine loops. Just depth, reflection, and
             continuity.
           </p>
-          <div className="flex flex-wrap items-center gap-4">
+          <div className="flex flex-wrap items-center gap-6">
             <Link
               to="/signup"
-              className="inline-flex items-center gap-2 rounded-full bg-cyan-400 px-5 py-2.5 text-sm font-semibold text-slate-950 shadow-lg shadow-cyan-500/40 hover:bg-cyan-300"
+              className="btn-premium flex items-center gap-2 px-8"
             >
               Start talking
-              <ArrowRight size={16} />
+              <ArrowRight size={18} />
             </Link>
             <Link
               to="/features"
-              className="inline-flex items-center gap-2 text-sm font-medium text-slate-200 hover:text-cyan-300"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-slate-300 hover:text-cyan-300 transition-colors"
             >
               See how it works
             </Link>
           </div>
-          <p className="text-xs text-slate-500">
-            Built for overthinkers, founders, and knowledge workers who want clarity, not noise.
+          <p className="text-sm font-medium text-slate-500 italic">
+            "Built for overthinkers, founders, and knowledge workers."
           </p>
         </div>
 
-        <div className="relative">
-          <div className="absolute -inset-10 -z-10 bg-cyan-500/10 blur-3xl" />
-          <div className="glass-panel relative h-full w-full p-5">
-            <div className="mb-4 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-900/80">
-                  <Mic size={18} className="text-cyan-300" />
+        <div className="relative group">
+          <div className="absolute -inset-10 -z-10 bg-cyan-500/10 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+          <div className="glass-panel relative h-full w-full p-8 overflow-hidden">
+            <div className="absolute top-0 right-0 p-4 opacity-10">
+              <Brain size={120} />
+            </div>
+            <div className="mb-6 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-950/80 border border-white/5 shadow-inner">
+                  <Mic size={20} className="text-cyan-400" />
                 </div>
-                <div className="text-xs">
-                  <p className="font-medium text-slate-200">Today&apos;s inner loop</p>
-                  <p className="text-slate-500">Voice session · 12:04 PM</p>
+                <div>
+                  <p className="text-xs font-bold text-slate-200">Today&apos;s inner loop</p>
+                  <p className="text-[10px] text-slate-500 uppercase tracking-widest">12:04 PM</p>
                 </div>
               </div>
-              <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-medium text-emerald-300">
-                Private by design
+              <span className="rounded-full bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 text-[10px] font-bold text-emerald-400 uppercase tracking-wider">
+                Private
               </span>
             </div>
 
-            <div className="space-y-3 text-sm">
-              <div className="rounded-2xl bg-slate-900/70 px-3 py-2 text-slate-200">
-                <p className="text-xs uppercase tracking-wide text-slate-500">You</p>
-                <p>
+            <div className="space-y-4">
+              <div className="rounded-2xl bg-slate-950/40 p-4 border border-white/5">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-slate-600 mb-1">Human</p>
+                <p className="text-sm text-slate-300 leading-relaxed">
                   I keep circling the same decisions and I&apos;m not sure what actually changed in
                   the last month.
                 </p>
               </div>
-              <div className="rounded-2xl bg-cyan-500/10 px-3 py-2 text-slate-100">
-                <p className="text-xs uppercase tracking-wide text-cyan-300">InnerLoop</p>
-                <p>
+              <div className="rounded-2xl bg-cyan-500/5 p-4 border border-cyan-500/10">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-cyan-500 mb-1">InnerLoop</p>
+                <p className="text-sm text-slate-100 leading-relaxed">
                   Let&apos;s slow this down. What decision feels the heaviest right now—and what
                   have you already tried that didn&apos;t move it forward?
                 </p>
               </div>
-              <div className="rounded-xl border border-cyan-500/30 bg-slate-950/70 px-3 py-2 text-xs text-cyan-100">
-                <p className="font-medium">Memory candidate detected</p>
-                <p className="text-slate-300">
+              <div className="rounded-2xl border border-cyan-500/30 bg-cyan-950/20 p-4 shadow-lg shadow-cyan-500/5">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-cyan-400 mb-1">Memory Detected</p>
+                <p className="text-xs text-slate-300 italic">
                   &ldquo;Decision about changing teams at work.&rdquo;
                 </p>
-                <div className="mt-2 flex items-center justify-between">
-                  <p className="text-[11px] text-slate-500">Category: Decisions · Confidence: 0.86</p>
-                  <button className="rounded-full bg-cyan-400/90 px-3 py-1 text-[11px] font-semibold text-slate-950">
-                    Remember this
+                <div className="mt-4 flex items-center justify-between pt-2 border-t border-cyan-500/10">
+                  <p className="text-[10px] text-slate-500 font-medium">Category: Decisions</p>
+                  <button className="rounded-full bg-cyan-400 px-4 py-1.5 text-[10px] font-bold text-slate-950 hover:bg-cyan-300 transition-colors">
+                    Confirm
                   </button>
                 </div>
               </div>

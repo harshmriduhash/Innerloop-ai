@@ -1,18 +1,56 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+:root {
+  --background: 224 71% 4%;
+  --foreground: 213 31% 91%;
+  --primary: 188 86% 53%;
+  --primary-foreground: 224 71% 4%;
+  --card: 224 71% 6%;
+  --card-foreground: 213 31% 91%;
+  --border: 213 31% 15%;
+  --ring: 188 86% 53%;
+}
 
-html,
-body,
-#root {
+@layer base {
+  body {
+    @apply bg-[#030712] text-slate-100 antialiased selection:bg-cyan-500/30;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+html, body, #root {
   height: 100%;
 }
 
-body {
-  @apply bg-background text-foreground antialiased;
+.glass-panel {
+  @apply bg-slate-900/40 backdrop-blur-xl border border-white/5 rounded-3xl shadow-2xl;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.glass-panel {
-  @apply bg-white/5 dark:bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-2xl shadow-lg;
+.glass-panel:hover {
+  @apply border-white/10 bg-slate-900/60;
+}
+
+.btn-premium {
+  @apply relative overflow-hidden rounded-full bg-cyan-400 px-6 py-2.5 text-sm font-bold text-slate-950 shadow-lg shadow-cyan-500/30 transition-all hover:scale-[1.02] hover:bg-cyan-300 active:scale-[0.98] disabled:opacity-50;
+}
+
+/* Smooth fade-in for pages */
+.page-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Custom scrollbar for premium feel */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-800 rounded-full hover:bg-slate-700;
 }
 
