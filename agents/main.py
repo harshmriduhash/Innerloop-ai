@@ -65,11 +65,13 @@ User just said:
 2. If this sounds like a decision, emotion, or goal worth remembering, say so in square brackets at the end: [MEMORY_CANDIDATE].
 3. If you are not sure, or there is no relevant memory, say clearly that you don't know yet instead of guessing.
 """
-  completion = client.responses.create(
-    model="gpt-4.1-mini",
-    input=prompt,
+  completion = client.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[
+      {"role": "system", "content": prompt}
+    ]
   )
-  raw = completion.output[0].content[0].text
+  raw = completion.choices[0].message.content
   memory = None
   if "[MEMORY_CANDIDATE]" in raw:
     reply = raw.replace("[MEMORY_CANDIDATE]", "").strip()
